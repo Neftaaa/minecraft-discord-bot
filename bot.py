@@ -5,7 +5,6 @@ from colorama import Fore
 import discord
 import discord.ext
 from discord import app_commands
-from interactions import MISSING
 
 
 def run_discord_bot():
@@ -81,7 +80,7 @@ def run_discord_bot():
                     log_bot_response(interaction)
 
             except Exception as e:
-               log_bot_response(interaction, e)
+                log_bot_response(interaction, e)
 
     def get_data_from_info_json():
         json_file_path = "info.json"
