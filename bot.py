@@ -26,7 +26,9 @@ def run_discord_bot():
 
             print(f'{Fore.GREEN}{bot.user} is now running!{Fore.RESET}')
 
-    token = "MTE1ODQ1OTQ5NzY2OTQ2ODIzMg.Gh1OpQ.bl8ysl0W3mpMSW0gHpLlXHobXwNKMs2UHjBfHI"
+    with open("token.txt", "r") as token_file:
+        token = token_file.read()
+
     bot = Client()
     tree = app_commands.CommandTree(bot)
 
