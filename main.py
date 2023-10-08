@@ -1,0 +1,6 @@
+import bot
+import requests
+
+if __name__ == "__main__":
+
+    bot.run_discord_bot()
