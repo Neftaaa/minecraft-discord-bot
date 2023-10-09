@@ -30,6 +30,7 @@ def run_discord_bot():
 
     bot = Client()
     tree = app_commands.CommandTree(bot)
+    json_path = "info.json"
 
     def log_user_command_message(interaction: discord.Interaction):
 
@@ -84,22 +85,17 @@ def run_discord_bot():
             except Exception as e:
                 log_bot_response(interaction, e)
 
-    def get_data_from_info_json():
-        json_file_path = "info.json"
-
-        with open(json_file_path, "r") as json_file:
+    def get_data_from_json(file_path: str = json_path):
+        with open(file_path, "r") as json_file:
             return json.load(json_file)
 
-    def update_info_json(data):
-
-        json_file_path = "info.json"
-
-        with open(json_file_path, "w") as json_file:
+    def update_json_data(data, file_path: str = json_path):
+        with open(file_path, "w") as json_file:
             json.dump(data, json_file)
 
     def get_remote_minecraft_address(server_id: int, command_address: str) -> str | None:
         if command_address == "" or command_address is None:
-            data = get_data_from_info_json()
+            data = get_data_from_json(json_path)
 
             for data_objet in data:
                 if server_id == data_objet["guild_id"]:
@@ -165,18 +161,18 @@ def run_discord_bot():
                 "default_address": default_address
             }
 
-            data = get_data_from_info_json()
+            data = get_data_from_json(json_path)
 
             for data_object in data:
                 if guild_info["guild_id"] == data_object["guild_id"]:
                     data_object["default_address"] = guild_info["default_address"]
 
-                    update_info_json(data)
+                    update_json_data(data)
                     await send_bot_response(interaction, f"Default address assigned: '{default_address}'")
                     return
 
             data.append(guild_info)
-            update_info_json(data)
+            update_json_data(data)
 
             await send_bot_response(interaction, f"Default address assigned: '{default_address}'")
 
