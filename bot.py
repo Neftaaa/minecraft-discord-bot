@@ -1,10 +1,9 @@
 import json
 from datetime import datetime
-import minestat
 from colorama import Fore
 import discord
-import discord.ext
 from discord import app_commands
+import requests
 
 
 def run_discord_bot():
@@ -85,7 +84,7 @@ def run_discord_bot():
             except Exception as e:
                 log_bot_response(interaction, e)
 
-    def get_data_from_json(file_path: str = json_path):
+    def get_data_from_json(file_path: str = json_path) -> list:
         with open(file_path, "r") as json_file:
             return json.load(json_file)
 
@@ -105,17 +104,47 @@ def run_discord_bot():
 
         return command_address
 
-    def build_online_server_embed(ms: minestat.MineStat, address, favicon_url: str) -> (discord.embeds.Embed, None):
+    def get_minecraft_server_info(address: str) -> (dict, str | None):
+        server_info_request = requests.get(f"https://api.mcsrvstat.us/3/{address}")
+        server_info = server_info_request.json()
+
+        if server_info["online"]:
+            icon_url = f"https://api.mcsrvstat.us/icon/{address}"
+            return server_info, icon_url
+        else:
+            return server_info, None
+
+    def convert_server_info_dict(server_info: dict) -> dict:
+        motd = server_info["motd"]
+        clean_motd = motd["clean"]
+        if len(clean_motd) == 1:
+            final_motd = clean_motd[0]
+        else:
+            final_motd = f"{clean_motd[0]}\n{clean_motd[1]}"
+
+        players_info = server_info["players"]
+        online_player_count = players_info["online"]
+        max_player_count = players_info["max"]
+
+        version = server_info["version"]
+        return {"final_motd": final_motd, "online_player_count": online_player_count,
+                "max_player_count": max_player_count, "version": version}
+
+    def build_online_server_embed(server_info: dict, address, favicon_url: str) -> (discord.embeds.Embed, None):
+
+        usable_server_info = convert_server_info_dict(server_info)
+
         server_info_embed = discord.Embed(title="**Server information :**", color=discord.Color.green())
 
         server_info_embed.set_author(name=address, icon_url=favicon_url)
         server_info_embed.set_thumbnail(url=favicon_url)
 
-        server_info_embed.add_field(name="MOTD:", value=ms.stripped_motd, inline=False)
+        server_info_embed.add_field(name="MOTD:", value=usable_server_info["final_motd"], inline=False)
         server_info_embed.add_field(name="\u200B", value="\u200B", inline=False)
-        server_info_embed.add_field(name="Player(s):", value=f"{ms.current_players}/{ms.max_players}", inline=True)
-        server_info_embed.add_field(name="Ping:", value=f"{ms.latency}ms", inline=True)
-        server_info_embed.add_field(name="Version:", value=ms.version, inline=True)
+        server_info_embed.add_field(name="Status:", value=f"Online", inline=True)
+        server_info_embed.add_field(name="Player(s):", value=f"{usable_server_info['online_player_count']}"
+                                                             f"/{usable_server_info['max_player_count']}", inline=True)
+        server_info_embed.add_field(name="Version:", value=usable_server_info['version'], inline=True)
 
         server_info_embed.timestamp = datetime.now()
         server_info_embed.set_footer(text="\u200B", icon_url=favicon_url)
@@ -135,18 +164,9 @@ def run_discord_bot():
         server_info_embed.set_footer()
         return server_info_embed, error_image
 
-    def get_minecraft_server_info(address: str) -> (minestat.MineStat | None, str | None):
-        ms = minestat.MineStat(address, 25565)
-
-        if ms.online:
-            favicon_url = f"https://eu.mc-api.net/v3/server/favicon/{address}"
-            return ms, favicon_url
-        else:
-            return ms, None
-
     """
-    @bot.command()
-    async def serverhelp(ctx: commands.Context):
+    @tree.command(name="help", description="Show the available commands.")
+    async def help(interaction: discord.Interaction):
         help_embed = discord.Embed(title="Help", color=discord.Color.green())
     """
 
@@ -189,12 +209,12 @@ def run_discord_bot():
                 await send_bot_response(interaction, "Default address is not assigned. Use /setdefault 'address' to assign it.")
 
             else:
-                server_info, favicon_url = get_minecraft_server_info(execution_address)
-                if server_info.online:
-                    embed_to_send, file_to_attach = build_online_server_embed(server_info, execution_address, favicon_url)
+                server_info, icon_url = get_minecraft_server_info(execution_address)
+                if icon_url is None:
+                    embed_to_send, file_to_attach = build_unreachable_server_embed(execution_address)
 
                 else:
-                    embed_to_send, file_to_attach = build_unreachable_server_embed(execution_address)
+                    embed_to_send, file_to_attach = build_online_server_embed(server_info, execution_address, icon_url)
 
                 await send_bot_response(interaction, embed_to_send, file_to_attach)
 
