@@ -23,7 +23,7 @@ def run_discord_bot():
                 await tree.sync()
                 self.synced = True
 
-            print(f'{Fore.GREEN}{bot.user} is now running!{Fore.RESET}')
+            print(f'{Fore.GREEN}{bot.user}{Fore.RESET} is now running!{Fore.RESET}')
 
     with open("token.txt", "r") as token_file:
         token = token_file.read()
@@ -52,15 +52,14 @@ def run_discord_bot():
         guild_id = str(interaction.guild.id)
 
         if exception is None:
-            print(f"Server: {Fore.LIGHTYELLOW_EX}{interaction.guild.name} {Fore.MAGENTA}({interaction.guild.id})"
-                  f"{Fore.RESET}: {Fore.GREEN}{bot.user}{Fore.RESET} answered successfully to {Fore.CYAN}{username}"
-                  f"{Fore.RESET} {Fore.BLUE}({channel}){Fore.RESET}, command: {Fore.LIGHTGREEN_EX}'{command}"
-                  f"'{Fore.RESET}")
+            print(f"Server: {Fore.LIGHTYELLOW_EX}{guild} {Fore.MAGENTA}({guild_id}){Fore.RESET}: "
+                  f"{Fore.GREEN}{bot.user}{Fore.RESET} answered successfully to {Fore.CYAN}{username}{Fore.RESET} "
+                  f"command: {Fore.LIGHTGREEN_EX}'{command}' {Fore.BLUE}({channel}){Fore.RESET}{Fore.RESET}")
 
         else:
-            print(f"Server: {Fore.LIGHTYELLOW_EX}{interaction.guild.name} {Fore.MAGENTA}({interaction.guild.id}){Fore.RESET}: "
+            print(f"Server: {Fore.LIGHTYELLOW_EX}{guild} {Fore.MAGENTA}({guild_id}){Fore.RESET}: "
                   f"{Fore.GREEN}{bot.user}{Fore.RESET} failed to respond to {Fore.CYAN} "
-                  f"{Fore.BLUE}(){Fore.RESET}\n"
+                  f"{Fore.BLUE}({channel}){Fore.RESET}\n"
                   f"    {Fore.LIGHTRED_EX}Exception: {exception}{Fore.RESET}")
 
     async def send_bot_response(interaction: discord.Interaction, message_to_send: str | discord.embeds.Embed | None = None,
@@ -182,7 +181,7 @@ def run_discord_bot():
             await send_bot_response(interaction, f"Default address assigned: '{default_address}'")
 
         except Exception as e:
-            await send_bot_response(exception=e)
+            await send_bot_response(interaction, exception=e)
 
     @tree.command(name="serverinfo", description="Returns information about a specific server.")
     async def serverinfo(interaction: discord.Interaction, address: str = ""):
