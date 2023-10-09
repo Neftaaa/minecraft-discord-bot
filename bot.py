@@ -31,27 +31,30 @@ def run_discord_bot():
     bot = Client()
     tree = app_commands.CommandTree(bot)
 
-    """
-    @bot.before_invoke
-    async def log_user_command_message(ctx: commands.Context):
+    def log_user_command_message(interaction: discord.Interaction):
 
-        username = str(ctx.message.author)
-        user_message = str(ctx.message.content)
-        channel = str(ctx.message.channel)
-        guild = str(ctx.guild.name)
-        guild_id = str(ctx.guild.id)
+        username = str(interaction.user)
+        command = str(interaction.command.name)
+        channel = str(interaction.channel)
+        guild = str(interaction.guild.name)
+        guild_id = str(interaction.guild.id)
 
         print(f"Server: {Fore.LIGHTYELLOW_EX}{guild} {Fore.MAGENTA}({guild_id}){Fore.RESET}: "
-              f"{Fore.CYAN}{username}{Fore.RESET} used command: {Fore.LIGHTGREEN_EX}'{user_message}'{Fore.RESET} "
-              f"{Fore.BLUE}({channel}){Fore.RESET}")0
-              
-    """
+              f"{Fore.CYAN}{username}{Fore.RESET} used command: {Fore.LIGHTGREEN_EX}'{command}'{Fore.RESET} "
+              f"{Fore.BLUE}({channel}){Fore.RESET}")
 
     def log_bot_response(interaction: discord.Interaction, exception: Exception | None = None):
+
+        username = str(interaction.user)
+        command = str(interaction.command.name)
+        channel = str(interaction.channel)
+        guild = str(interaction.guild.name)
+        guild_id = str(interaction.guild.id)
+
         if exception is None:
-            print(f"Server: {Fore.LIGHTYELLOW_EX}{interaction.guild.name} {Fore.MAGENTA}({interaction.guild.id}){Fore.RESET}: "
-                  f"{Fore.GREEN}{bot.user}{Fore.RESET} answered successfully to {Fore.CYAN}"
-                  f"{Fore.RESET} {Fore.BLUE}(){Fore.RESET}, command: {Fore.LIGHTGREEN_EX}'"
+            print(f"Server: {Fore.LIGHTYELLOW_EX}{interaction.guild.name} {Fore.MAGENTA}({interaction.guild.id})"
+                  f"{Fore.RESET}: {Fore.GREEN}{bot.user}{Fore.RESET} answered successfully to {Fore.CYAN}{username}"
+                  f"{Fore.RESET} {Fore.BLUE}({channel}){Fore.RESET}, command: {Fore.LIGHTGREEN_EX}'{command}"
                   f"'{Fore.RESET}")
 
         else:
@@ -148,10 +151,18 @@ def run_discord_bot():
 
     """
     @bot.command()
-    async def setdefault(ctx: commands.Context, default_address: str):
+    async def serverhelp(ctx: commands.Context):
+        help_embed = discord.Embed(title="Help", color=discord.Color.green())
+    """
+
+    @tree.command(name="setdefault", description="Set the default address that the command '/serverinfo' will use.")
+    async def setdefault(interaction: discord.Interaction, default_address: str):
         try:
+            await interaction.response.defer()
+            log_user_command_message(interaction)
+
             guild_info = {
-                "guild_id": ctx.guild.id,
+                "guild_id": interaction.guild.id,
                 "default_address": default_address
             }
 
@@ -162,24 +173,20 @@ def run_discord_bot():
                     data_object["default_address"] = guild_info["default_address"]
 
                     update_info_json(data)
-                    await send_bot_response(ctx, f"Default address assigned: '{default_address}'")
+                    await send_bot_response(interaction, f"Default address assigned: '{default_address}'")
                     return
 
             data.append(guild_info)
             update_info_json(data)
 
-            await send_bot_response(ctx, f"Default address assigned: '{default_address}'")
+            await send_bot_response(interaction, f"Default address assigned: '{default_address}'")
 
         except Exception as e:
             await send_bot_response(exception=e)
 
-    @bot.command()
-    async def serverhelp(ctx: commands.Context):
-        help_embed = discord.Embed(title="Help", color=discord.Color.green())
-    """
-
     @tree.command(name="serverinfo", description="Returns information about a specific server.")
     async def serverinfo(interaction: discord.Interaction, address: str = ""):
+        log_user_command_message(interaction)
         try:
             await interaction.response.defer()
             execution_address = get_remote_minecraft_address(interaction.guild.id, address)
