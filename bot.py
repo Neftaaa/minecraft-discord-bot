@@ -86,7 +86,7 @@ def run_discord_bot():
                                 file_to_attach: discord.file.File | None = None, exception: Exception | None = None):
         if exception is not None:
             log_bot_response(interaction, exception)
-            await interaction.send_message("An error occurred.")
+            await interaction.response.send_message("An error occurred.")
 
         else:
             try:
@@ -154,7 +154,7 @@ def run_discord_bot():
 
         usable_server_info = convert_server_info_dict(server_info)
 
-        server_info_embed = discord.Embed(title="**Server information :**", color=discord.Color.green())
+        server_info_embed = discord.Embed(title="Server information :", color=discord.Color.green())
 
         server_info_embed.set_author(name=address, icon_url=favicon_url)
         server_info_embed.set_thumbnail(url=favicon_url)
@@ -173,7 +173,7 @@ def run_discord_bot():
     def build_unreachable_server_embed(address) -> (discord.embeds.Embed, discord.File):
         error_image = discord.File("resources/error.png", filename="error.png")
 
-        server_info_embed = discord.Embed(title="**Can't connect to server.**", color=discord.Color.green())
+        server_info_embed = discord.Embed(title="Can't connect to server.", color=discord.Color.green())
 
         server_info_embed.add_field(name="", value="Server is offline or doesn't exist.")
 
@@ -184,6 +184,17 @@ def run_discord_bot():
         server_info_embed.set_footer()
         return server_info_embed, error_image
 
+    def build_default_address_embed(default_address: str) -> (discord.embeds.Embed, discord.File):
+        valid_image = discord.File("resources/valid.png", filename="valid.png")
+
+        default_address_embed = discord.Embed(title=f"Default address assigned: '{default_address}'", color=discord.Color.green())
+        default_address_embed.set_author(name=default_address, icon_url="attachment://valid.png")
+        default_address_embed.set_thumbnail(url="attachment://valid.png")
+
+        default_address_embed.timestamp = datetime.now()
+        default_address_embed.set_footer()
+        return default_address_embed, valid_image
+
     @tree.command(name="help", description="Show the available commands.")
     async def help(interaction: discord.Interaction):
         help_embed = discord.Embed(title="Help", color=discord.Color.green())
@@ -193,6 +204,8 @@ def run_discord_bot():
     async def setdefault(interaction: discord.Interaction, default_address: str):
         try:
             log_user_command_message(interaction)
+
+            default_address_embed, file_to_attach = build_default_address_embed(default_address)
 
             guild_info = {
                 "guild_id": interaction.guild.id,
@@ -206,13 +219,13 @@ def run_discord_bot():
                     data_object["default_address"] = guild_info["default_address"]
 
                     update_json_data(data)
-                    await send_bot_response(interaction, f"Default address assigned: '{default_address}'")
+                    await send_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
                     return
 
             data.append(guild_info)
             update_json_data(data)
 
-            await send_bot_response(interaction, f"Default address assigned: '{default_address}'")
+            await send_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
 
         except Exception as e:
             await send_bot_response(interaction, exception=e)
