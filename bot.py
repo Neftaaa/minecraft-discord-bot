@@ -195,9 +195,19 @@ def run_discord_bot():
         default_address_embed.set_footer()
         return default_address_embed, valid_image
 
+    def build_help_embed():
+        help_embed = discord.Embed(title="Help", color=discord.Color.green())
+        help_embed.add_field(name="Bot information:", value="MC Server Info is a discord bot that returns information about a minecraft server.", inline=False)
+        help_embed.add_field(name="/help", value="Show this message.", inline=False)
+        help_embed.add_field(name="/serverinfo 'address'", value="Will return information about a specific minecraft server. Can be use without specifying the address if you set"
+                                                                 " a default address with '/setdefault'.", inline=False)
+        help_embed.add_field(name="/setdefault 'default_address'", value="Set a default address that the bot will use if you don't specify an address using '/serverinfo'.",
+                             inline=False)
+        return help_embed
+
     @tree.command(name="help", description="Show the available commands.")
     async def help(interaction: discord.Interaction):
-        help_embed = discord.Embed(title="Help", color=discord.Color.green())
+        help_embed = build_help_embed()
         await send_bot_response(interaction, help_embed)
 
     @tree.command(name="setdefault", description="Set the default address that the command '/serverinfo' will use.")
