@@ -7,10 +7,8 @@ import requests
 
 
 def run_discord_bot():
-
     class Client(discord.Client):
         def __init__(self) -> None:
-
             intents = discord.Intents.all()
 
             super().__init__(intents=intents)
@@ -62,8 +60,8 @@ def run_discord_bot():
                   f"{Fore.BLUE}({channel}){Fore.RESET}\n"
                   f"    {Fore.LIGHTRED_EX}Exception: {exception}{Fore.RESET}")
 
-    async def send_bot_response(interaction: discord.Interaction, message_to_send: str | discord.embeds.Embed | None = None,
-                                file_to_attach: discord.file.File | None = None, exception: Exception | None = None):
+    async def send_deferred_bot_response(interaction: discord.Interaction, message_to_send: str | discord.embeds.Embed | None = None,
+                                         file_to_attach: discord.file.File | None = None, exception: Exception | None = None):
         if exception is not None:
             log_bot_response(interaction, exception)
             await interaction.followup.send("An error occurred.")
@@ -79,6 +77,28 @@ def run_discord_bot():
                         await interaction.followup.send(embed=message_to_send, file=file_to_attach)
                     else:
                         await interaction.followup.send(embed=message_to_send)
+                    log_bot_response(interaction)
+
+            except Exception as e:
+                log_bot_response(interaction, e)
+
+    async def send_bot_response(interaction: discord.Interaction, message_to_send: str | discord.embeds.Embed | None = None,
+                                file_to_attach: discord.file.File | None = None, exception: Exception | None = None):
+        if exception is not None:
+            log_bot_response(interaction, exception)
+            await interaction.send_message("An error occurred.")
+
+        else:
+            try:
+                if type(message_to_send) == str:
+                    await interaction.response.send_message(message_to_send)
+                    log_bot_response(interaction)
+
+                else:
+                    if file_to_attach is not None:
+                        await interaction.response.send_message(embed=message_to_send, file=file_to_attach)
+                    else:
+                        await interaction.response.send_message(embed=message_to_send)
                     log_bot_response(interaction)
 
             except Exception as e:
@@ -164,16 +184,14 @@ def run_discord_bot():
         server_info_embed.set_footer()
         return server_info_embed, error_image
 
-    """
     @tree.command(name="help", description="Show the available commands.")
     async def help(interaction: discord.Interaction):
         help_embed = discord.Embed(title="Help", color=discord.Color.green())
-    """
+        await send_bot_response(interaction, help_embed)
 
     @tree.command(name="setdefault", description="Set the default address that the command '/serverinfo' will use.")
     async def setdefault(interaction: discord.Interaction, default_address: str):
         try:
-            await interaction.response.defer()
             log_user_command_message(interaction)
 
             guild_info = {
@@ -206,7 +224,7 @@ def run_discord_bot():
             await interaction.response.defer()
             execution_address = get_remote_minecraft_address(interaction.guild.id, address)
             if execution_address == "" or execution_address is None:
-                await send_bot_response(interaction, "Default address is not assigned. Use /setdefault 'address' to assign it.")
+                await send_deferred_bot_response(interaction, "Default address is not assigned. Use /setdefault 'address' to assign it.")
 
             else:
                 server_info, icon_url = get_minecraft_server_info(execution_address)
@@ -216,9 +234,9 @@ def run_discord_bot():
                 else:
                     embed_to_send, file_to_attach = build_online_server_embed(server_info, execution_address, icon_url)
 
-                await send_bot_response(interaction, embed_to_send, file_to_attach)
+                await send_deferred_bot_response(interaction, embed_to_send, file_to_attach)
 
         except Exception as e:
-            await send_bot_response(interaction, exception=e)
+            await send_deferred_bot_response(interaction, exception=e)
 
     bot.run(token)
