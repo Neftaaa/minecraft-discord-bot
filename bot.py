@@ -41,26 +41,11 @@ def run_discord_bot():
     async def setdefault(interaction: discord.Interaction, default_address: str):
         log_user_command_message(interaction)
         try:
-            default_address_embed, file_to_attach = build_default_address_embed(default_address)
-
-            guild_info = {
-                "guild_id": interaction.guild.id,
-                "default_address": default_address
-            }
 
             data = get_data_from_json(json_path)
+            update_json_data(interaction, data, default_address, json_path)
 
-            for data_object in data:
-                if guild_info["guild_id"] == data_object["guild_id"]:
-                    data_object["default_address"] = guild_info["default_address"]
-
-                    update_json_data(data, json_path)
-                    await send_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
-                    return
-
-            data.append(guild_info)
-            update_json_data(data, json_path)
-
+            default_address_embed, file_to_attach = build_default_address_embed(default_address)
             await send_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
 
         except Exception as e:
@@ -71,7 +56,7 @@ def run_discord_bot():
         log_user_command_message(interaction)
         try:
             await interaction.response.defer()
-            execution_address = get_remote_minecraft_address(interaction.guild.id, address, json_path)
+            execution_address = get_remote_minecraft_address(interaction, address, json_path)
             if execution_address == "" or execution_address is None:
                 await send_deferred_bot_response(interaction, "Default address is not assigned. Use /setdefault 'address' to assign it.")
 
