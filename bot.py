@@ -1,10 +1,10 @@
 import discord
 from discord import app_commands
 
-from server_info_getter import get_minecraft_server_info
-from embeds_builders import *
-from senders import *
-from json_files_processors import *
+from functions.server_info_getter import get_minecraft_server_info
+from functions.embeds_builders import *
+from functions.senders import *
+from functions.json_files_processors import *
 
 
 def run_discord_bot():
