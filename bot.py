@@ -4,7 +4,7 @@ from discord import app_commands
 from functions.server_info_getter import get_minecraft_server_info
 from functions.embeds_builders import *
 from functions.senders import *
-from functions.json_files_processors import *
+from functions.json_files_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
 
 
 def run_discord_bot():
