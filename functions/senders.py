@@ -10,7 +10,7 @@ async def send_deferred_bot_response(interaction: discord.Interaction, message_t
 
     else:
         try:
-            if type(message_to_send) == str:
+            if str == type(message_to_send):
                 await interaction.followup.send(message_to_send)
                 log_bot_response(interaction)
 
@@ -33,7 +33,7 @@ async def send_bot_response(interaction: discord.Interaction, message_to_send: s
 
     else:
         try:
-            if type(message_to_send) == str:
+            if str == type(message_to_send):
                 await interaction.response.send_message(message_to_send)
                 log_bot_response(interaction)
 

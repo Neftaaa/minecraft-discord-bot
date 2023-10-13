@@ -7,7 +7,7 @@ def log_user_command_message(interaction: discord.Interaction):
     username = str(interaction.user.name)
     command = str(interaction.command.name)
     channel = str(interaction.channel)
-    a = interaction.channel.type
+
     if str(interaction.channel.type) == "private":
         user = interaction.user
         user_id = interaction.user.id
