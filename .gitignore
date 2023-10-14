@@ -1,7 +1,8 @@
 venv
 __pycache__
 .idea
-server-icons
+server-icons/*
+!server-icons/default_icon.png
 info.json
 *.iml
 token.txt
