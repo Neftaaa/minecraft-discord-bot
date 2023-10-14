@@ -1,6 +1,7 @@
 venv
 __pycache__
-info.json
 .idea
+server-icons
+info.json
 *.iml
 token.txt
