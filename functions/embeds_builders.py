@@ -24,8 +24,8 @@ def build_help_embed() -> discord.embeds.Embed:
     help_embed.add_field(name="Bot information:", value="```MC Server Info is a discord bot that returns information about a minecraft server.```", inline=False)
     help_embed.add_field(name="/help", value="```Show this message.```", inline=False)
     help_embed.add_field(name="/server-info `address`", value="```Will return information about a specific minecraft server. Can be use without specifying the address if you set"
-                                                              " a default address with '/setdefault'.```", inline=False)
-    help_embed.add_field(name="/set-default `default_address`", value="```Set a default address that the bot will use if you don't specify an address using '/serverinfo'.```",
+                                                              " a default address with '/set-default'.```", inline=False)
+    help_embed.add_field(name="/set-default `default_address`", value="```Set a default address that the bot will use if you don't specify an address using '/server-info'.```",
                          inline=False)
     help_embed.add_field(name="/current-default", value="```Returns the current default address.```")
     return help_embed
