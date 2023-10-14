@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 
-from functions.server_info_getter import *
+from functions.server_data_getter import *
 from functions.embeds_builders import *
 from functions.senders import *
 from functions.json_files_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
@@ -38,8 +38,8 @@ def run_discord_bot():
         help_embed = build_help_embed()
         await send_bot_response(interaction, help_embed)
 
-    @tree.command(name="setdefault", description="Set the default address that the command '/serverinfo' will use.")
-    async def setdefault(interaction: discord.Interaction, default_address: str):
+    @tree.command(name="set-default", description="Set the default address that the command '/serverinfo' will use.")
+    async def set_default(interaction: discord.Interaction, default_address: str):
         log_user_command_message(interaction)
         try:
 
@@ -52,28 +52,42 @@ def run_discord_bot():
         except Exception as e:
             await send_bot_response(interaction, exception=e)
 
-    @tree.command(name="serverinfo", description="Returns information about a specific server.")
-    async def serverinfo(interaction: discord.Interaction, address: str = ""):
+    @tree.command(name="current-default", description="Returns the current default address.")
+    async def current_default(interaction: discord.Interaction):
+        log_user_command_message(interaction)
+        try:
+            address = get_remote_minecraft_address(interaction, json_path)
+            if address is None:
+                await send_bot_response(interaction, "```Default address is not assigned. Use /setdefault 'address' to assign it.```")
+
+            else:
+                await send_bot_response(interaction, f"```The current default address is '{address}'.```")
+
+        except Exception as e:
+            await send_bot_response(interaction, exception=e)
+
+    @tree.command(name="server-info", description="Returns information about a specific server.")
+    async def server_info(interaction: discord.Interaction, address: str = ""):
         log_user_command_message(interaction)
         try:
             await interaction.response.defer()
 
-            execution_address = get_remote_minecraft_address(interaction, address, json_path)
+            execution_address = get_remote_minecraft_address(interaction, json_path, address)
             if execution_address == "" or execution_address is None:
-                await send_deferred_bot_response(interaction, "Default address is not assigned. Use /setdefault 'address' to assign it.")
+                await send_deferred_bot_response(interaction, "```Default address is not assigned. Use /setdefault 'address' to assign it.```")
 
             else:
-                server_info = get_minecraft_server_info(execution_address)
+                server_data = get_minecraft_server_data(execution_address)
 
-                if server_info["online"]:
-                    if "icon" in server_info.keys():
+                if server_data["online"]:
+                    if "icon" in server_data.keys():
                         icon_path = f"server-icons/{execution_address}.png"
-                        save_icon(icon_path, server_info["icon"])
+                        save_icon(icon_path, server_data["icon"])
 
                     else:
                         icon_path = "server-icons/default_icon.png"
 
-                    embed_to_send, icon = build_online_server_embed(server_info, execution_address, icon_path)
+                    embed_to_send, icon = build_online_server_embed(server_data, execution_address, icon_path)
 
                 else:
                     embed_to_send, icon = build_unreachable_server_embed(execution_address)

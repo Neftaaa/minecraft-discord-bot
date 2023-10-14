@@ -29,7 +29,7 @@ async def send_bot_response(interaction: discord.Interaction, message_to_send: s
                             file_to_attach: discord.file.File | None = None, exception: Exception | None = None):
     if exception is not None:
         log_bot_response(interaction, exception)
-        await interaction.response.send_message("An error occurred.")
+        await interaction.response.send_message("```An error occurred.```")
 
     else:
         try:

@@ -57,7 +57,7 @@ def update_json_data(interaction: discord.Interaction, data, default_address, fi
         json.dump(updated_data, json_file)
 
 
-def get_remote_minecraft_address(interaction: discord.Interaction, server_address: str, json_path: str) -> str | None:
+def get_remote_minecraft_address(interaction: discord.Interaction, json_path: str, server_address: str | None = None) -> str | None:
     if server_address == "" or server_address is None:
         data = get_data_from_json(json_path)
 
