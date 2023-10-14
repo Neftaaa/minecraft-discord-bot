@@ -71,7 +71,7 @@ def run_discord_bot():
                         save_icon(icon_path, server_info["icon"])
 
                     else:
-                        icon_path = "resources/default_icon.png"
+                        icon_path = "server-icons/default_icon.png"
 
                     embed_to_send, icon = build_online_server_embed(server_info, execution_address, icon_path)
 
