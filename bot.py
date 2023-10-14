@@ -1,10 +1,11 @@
 import discord
 from discord import app_commands
 
-from functions.server_info_getter import get_minecraft_server_info
+from functions.server_info_getter import *
 from functions.embeds_builders import *
 from functions.senders import *
 from functions.json_files_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
+from functions.icon_saver import *
 
 
 def run_discord_bot():
@@ -56,20 +57,28 @@ def run_discord_bot():
         log_user_command_message(interaction)
         try:
             await interaction.response.defer()
+
             execution_address = get_remote_minecraft_address(interaction, address, json_path)
             if execution_address == "" or execution_address is None:
                 await send_deferred_bot_response(interaction, "Default address is not assigned. Use /setdefault 'address' to assign it.")
 
             else:
-                server_info, icon_url = get_minecraft_server_info(execution_address)
+                server_info = get_minecraft_server_info(execution_address)
 
-                if icon_url is None:
-                    embed_to_send, file_to_attach = build_unreachable_server_embed(execution_address)
+                if server_info["online"]:
+                    if "icon" in server_info.keys():
+                        icon_path = f"server-icons/{execution_address}.png"
+                        save_icon(icon_path, server_info["icon"])
+
+                    else:
+                        icon_path = "resources/default_icon.png"
+
+                    embed_to_send, icon = build_online_server_embed(server_info, execution_address, icon_path)
 
                 else:
-                    embed_to_send, file_to_attach = build_online_server_embed(server_info, execution_address, icon_url)
+                    embed_to_send, icon = build_unreachable_server_embed(execution_address)
 
-                await send_deferred_bot_response(interaction, embed_to_send, file_to_attach)
+                await send_deferred_bot_response(interaction, embed_to_send, icon)
 
         except Exception as e:
             await send_deferred_bot_response(interaction, exception=e)

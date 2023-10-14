@@ -19,7 +19,7 @@ def convert_server_info_dict(server_info: dict) -> dict:
             "max_player_count": max_player_count, "version": version}
 
 
-def build_help_embed():
+def build_help_embed() -> discord.embeds.Embed:
     help_embed = discord.Embed(title="Help", color=discord.Color.green())
     help_embed.add_field(name="Bot information:", value="```MC Server Info is a discord bot that returns information about a minecraft server.```", inline=False)
     help_embed.add_field(name="/help", value="```Show this message.```", inline=False)
@@ -30,13 +30,14 @@ def build_help_embed():
     return help_embed
 
 
-def build_online_server_embed(server_info: dict, address, favicon_url: str) -> (discord.embeds.Embed, None):
+def build_online_server_embed(server_info: dict, address, icon_path: str) -> (discord.embeds.Embed, discord.File):
     usable_server_info = convert_server_info_dict(server_info)
+    server_icon = discord.File(icon_path, filename="default_icon.png")
 
     server_info_embed = discord.Embed(title="Server information :", color=discord.Color.green())
 
-    server_info_embed.set_author(name=address, icon_url=favicon_url)
-    server_info_embed.set_thumbnail(url=favicon_url)
+    server_info_embed.set_author(name=address, icon_url="attachment://default_icon.png")
+    server_info_embed.set_thumbnail(url="attachment://default_icon.png")
 
     server_info_embed.add_field(name="MOTD:", value=f"```{usable_server_info['final_motd']}```", inline=False)
     server_info_embed.add_field(name="\u200B", value="\u200B", inline=False)
@@ -46,8 +47,8 @@ def build_online_server_embed(server_info: dict, address, favicon_url: str) -> (
     server_info_embed.add_field(name="Version:", value=f"`{usable_server_info['version']}`", inline=True)
 
     server_info_embed.timestamp = datetime.now()
-    server_info_embed.set_footer(text="\u200B", icon_url=favicon_url)
-    return server_info_embed, None
+    server_info_embed.set_footer(text="\u200B", icon_url="attachment://default_icon.png")
+    return server_info_embed, server_icon
 
 
 def build_unreachable_server_embed(address) -> (discord.embeds.Embed, discord.File):
