@@ -6,7 +6,7 @@ async def send_deferred_bot_response(interaction: discord.Interaction, message_t
                                      file_to_attach: discord.file.File | None = None, exception: Exception | None = None):
     if exception is not None:
         log_bot_response(interaction, exception)
-        await interaction.followup.send("An error occurred.")
+        await interaction.followup.send("```An error occurred.```")
 
     else:
         try:
