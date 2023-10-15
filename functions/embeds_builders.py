@@ -19,7 +19,7 @@ def convert_server_data_dict(server_data: dict) -> dict:
             "max_player_count": max_player_count, "version": version}
 
 
-def build_help_embed() -> discord.embeds.Embed:
+def build_help_embed(supported_languages: str) -> discord.embeds.Embed:
     help_embed = discord.Embed(title="Help", color=discord.Color.green())
     help_embed.add_field(name="Bot information:", value="```MC Server Info is a discord bot that returns information about a minecraft server.```", inline=False)
     help_embed.add_field(name="/help", value="```Show this message.```", inline=False)
@@ -28,6 +28,7 @@ def build_help_embed() -> discord.embeds.Embed:
     help_embed.add_field(name="/set-default `default_address`", value="```Set a default address that the bot will use if you don't specify an address using '/server-info'.```",
                          inline=False)
     help_embed.add_field(name="/current-default", value="```Returns the current default address.```")
+    help_embed.add_field(name="/language", value=f"```Change the language of the bot. Supported languages: {supported_languages}.```")
     return help_embed
 
 
@@ -72,6 +73,18 @@ def build_default_address_embed(default_address: str) -> (discord.embeds.Embed, 
 
     default_address_embed = discord.Embed(title=f"Default address assigned: '{default_address}'", color=discord.Color.green())
     default_address_embed.set_author(name=default_address, icon_url="attachment://valid.png")
+    default_address_embed.set_thumbnail(url="attachment://valid.png")
+
+    default_address_embed.timestamp = datetime.now()
+    default_address_embed.set_footer()
+    return default_address_embed, valid_image
+
+
+def build_language_embed(lang: str) -> (discord.embeds.Embed, discord.File):
+    valid_image = discord.File("resources/valid.png", filename="valid.png")
+
+    default_address_embed = discord.Embed(title=f"Language assigned: '{lang}'", color=discord.Color.green())
+    default_address_embed.set_author(name=lang, icon_url="attachment://valid.png")
     default_address_embed.set_thumbnail(url="attachment://valid.png")
 
     default_address_embed.timestamp = datetime.now()

@@ -46,7 +46,7 @@ def run_discord_bot():
             await interaction.response.defer()
             log_user_command_message(interaction)
 
-            help_embed = build_help_embed()
+            help_embed = build_help_embed(supported_languages_str)
             await send_deferred_bot_response(interaction, help_embed)
 
         except Exception as e:
@@ -120,13 +120,16 @@ def run_discord_bot():
             await interaction.response.defer()
             log_user_command_message(interaction)
 
-            if lang not in supported_languages:
-                await send_deferred_bot_response(interaction, f"```Specified language is not supported. Supported languages: {supported_languages_str}```")
+            normalized_lang = lang.lower()
+            if normalized_lang not in supported_languages:
+                await send_deferred_bot_response(interaction, f"```Specified language is not supported. Supported languages: {supported_languages_str}.```")
 
             else:
                 data = get_data_from_json(json_path)
-                update_json_data(interaction, json_path, data, lang=lang)
-                await send_deferred_bot_response(interaction, f"```Language assigned '{lang}'```")
+                update_json_data(interaction, json_path, data, lang=normalized_lang)
+
+                language_embed, file_to_attach = build_language_embed(normalized_lang)
+                await send_deferred_bot_response(interaction, language_embed, file_to_attach)
 
         except Exception as e:
             await send_deferred_bot_response(interaction, exception=e)
