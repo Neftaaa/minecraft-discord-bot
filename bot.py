@@ -7,7 +7,7 @@ from functions.server_data_getter import *
 from functions.embeds_builders import *
 from functions.senders import send_deferred_bot_response
 from functions.loggers import log_user_command_message
-from functions.interactions_data_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
+from functions.interactions_data_processors import get_interactions_data, update_interactions_data, get_remote_minecraft_address
 from functions.icon_saver import *
 
 
@@ -64,8 +64,8 @@ def run_discord_bot():
             await interaction.response.defer()
             log_user_command_message(interaction)
 
-            data = get_data_from_json(json_path)
-            update_json_data(interaction, json_path, data, default_address)
+            data = get_interactions_data(json_path)
+            update_interactions_data(interaction, json_path, data, default_address)
 
             default_address_embed, file_to_attach = build_default_address_embed(default_address)
             await send_deferred_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
@@ -131,8 +131,8 @@ def run_discord_bot():
                 await send_deferred_bot_response(interaction, f"```Specified language is not supported. Supported languages: {supported_languages_str}```")
 
             else:
-                data = get_data_from_json(json_path)
-                update_json_data(interaction, json_path, data, lang=normalized_lang)
+                data = get_interactions_data(json_path)
+                update_interactions_data(interaction, json_path, data, lang=normalized_lang)
 
                 language_embed, file_to_attach = build_language_embed(normalized_lang)
                 await send_deferred_bot_response(interaction, language_embed, file_to_attach)

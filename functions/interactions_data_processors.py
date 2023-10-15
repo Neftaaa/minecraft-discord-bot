@@ -3,7 +3,7 @@ import json
 from os import path
 
 
-def get_data_from_json(file_path: str) -> dict:
+def get_interactions_data(file_path: str) -> dict:
     if path.exists(file_path):
         with open(file_path, "r") as json_file:
             return json.load(json_file)
@@ -13,7 +13,7 @@ def get_data_from_json(file_path: str) -> dict:
         return {"guilds": [], "privates": []}
 
 
-def update_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
+def update_interactions_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
     guilds_list = data["guilds"]
     is_new_guild = True
     guild_id = interaction.guild.id
@@ -36,7 +36,7 @@ def update_data_for_guild(interaction: discord.Interaction, data: dict, default_
     return data
 
 
-def update_data_for_private(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
+def update_interactions_data_for_private(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
     privates_list = data["privates"]
     is_new_user = True
     user_id = interaction.user.id
@@ -60,12 +60,12 @@ def update_data_for_private(interaction: discord.Interaction, data: dict, defaul
     return data
 
 
-def update_json_data(interaction: discord.Interaction, file_path: str, data: dict, default_address: str | None = None, lang: str | None = None):
+def update_interactions_data(interaction: discord.Interaction, file_path: str, data: dict, default_address: str | None = None, lang: str | None = None):
     if str(interaction.channel.type) == "text":
-        updated_data = update_data_for_guild(interaction, data, default_address, lang)
+        updated_data = update_interactions_data_for_guild(interaction, data, default_address, lang)
 
     elif str(interaction.channel.type) == "private":
-        updated_data = update_data_for_private(interaction, data, default_address, lang)
+        updated_data = update_interactions_data_for_private(interaction, data, default_address, lang)
 
     else:
         return
@@ -76,7 +76,7 @@ def update_json_data(interaction: discord.Interaction, file_path: str, data: dic
 
 def get_remote_minecraft_address(interaction: discord.Interaction, json_path: str, server_address: str | None = None) -> str | None:
     if server_address == "" or server_address is None:
-        data = get_data_from_json(json_path)
+        data = get_interactions_data(json_path)
 
         if str(interaction.channel.type) == "private":
             privates_list = data["privates"]
