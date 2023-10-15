@@ -6,7 +6,7 @@ from functions.server_data_getter import *
 from functions.embeds_builders import *
 from functions.senders import send_deferred_bot_response
 from functions.loggers import log_user_command_message
-from functions.json_files_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
+from functions.interactions_data_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
 from functions.icon_saver import *
 
 
