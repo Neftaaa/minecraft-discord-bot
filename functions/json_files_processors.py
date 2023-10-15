@@ -1,5 +1,16 @@
 import discord
 import json
+from os import path
+
+
+def get_data_from_json(file_path: str) -> dict:
+    if os.path.exists(file_path):
+        with open(file_path, "r") as json_file:
+            return json.load(json_file)
+
+    with open(file_path, "w+") as new_json_file:
+        new_json_file.write('{"guilds": [], "privates": []}')
+        return {"guilds": [], "privates": []}
 
 
 def update_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
@@ -45,11 +56,6 @@ def update_data_for_private(interaction: discord.Interaction, data: dict, defaul
 
     data["privates"] = privates_list
     return data
-
-
-def get_data_from_json(file_path: str) -> dict:
-    with open(file_path, "r") as json_file:
-        return json.load(json_file)
 
 
 def update_json_data(interaction: discord.Interaction, file_path: str, data: dict, default_address: str | None = None, lang: str | None = None):
