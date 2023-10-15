@@ -28,7 +28,7 @@ def build_help_embed(supported_languages: str) -> discord.embeds.Embed:
     help_embed.add_field(name="/set-default `default_address`", value="```Set a default address that the bot will use if you don't specify an address using '/server-info'.```",
                          inline=False)
     help_embed.add_field(name="/current-default", value="```Returns the current default address.```")
-    help_embed.add_field(name="/language", value=f"```Change the language of the bot. Supported languages: {supported_languages}```")
+    help_embed.add_field(name="/language `lang`", value=f"```Change the language of the bot. Supported languages: {supported_languages}```", inline=False)
     return help_embed
 
 

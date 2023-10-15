@@ -41,8 +41,8 @@ def run_discord_bot():
 
     supported_languages_str = ""
     for language in supported_languages_list:
-        normalized_language = language.split(".json")
-        supported_languages_str += f"{normalized_language}, "
+        normalized_language = language.split(".")[0]
+        supported_languages_str += normalized_language + ", "
 
     supported_languages_str = supported_languages_str[:-2]
 
