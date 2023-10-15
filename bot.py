@@ -37,12 +37,12 @@ def run_discord_bot():
     supported_languages_list = []
     languages_dir = 'languages'
     for filename in listdir(languages_dir):
-        supported_languages_list.append(filename)
+        normalized_filename = filename.split(".")[0]
+        supported_languages_list.append(normalized_filename)
 
     supported_languages_str = ""
     for language in supported_languages_list:
-        normalized_language = language.split(".")[0]
-        supported_languages_str += normalized_language + ", "
+        supported_languages_str += language + ", "
 
     supported_languages_str = supported_languages_str[:-2]
 
