@@ -31,7 +31,7 @@ def run_discord_bot():
 
     bot = Client()
     tree = app_commands.CommandTree(bot)
-    json_path = "info.json"
+    json_path = "interactions-data.json"
     supported_languages = ["en", "fr"]
 
     supported_languages_str = ""

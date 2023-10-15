@@ -3,6 +3,6 @@ __pycache__
 .idea
 server-icons/*
 !server-icons/default_icon.png
-info.json
+interactions-data.json
 *.iml
 token.txt
