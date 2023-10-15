@@ -3,7 +3,7 @@ from discord import app_commands
 
 from functions.server_data_getter import *
 from functions.embeds_builders import *
-from functions.senders import *
+from functions.senders import send_deferred_bot_response
 from functions.json_files_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
 from functions.icon_saver import *
 
@@ -33,44 +33,50 @@ def run_discord_bot():
 
     @tree.command(name="help", description="Show the available commands.")
     async def help(interaction: discord.Interaction):
-        log_user_command_message(interaction)
+        try:
+            await interaction.response.defer()
+            log_user_command_message(interaction)
 
-        help_embed = build_help_embed()
-        await send_bot_response(interaction, help_embed)
+            help_embed = build_help_embed()
+            await send_deferred_bot_response(interaction, help_embed)
+
+        except Exception as e:
+            await send_deferred_bot_response(interaction, exception=e)
 
     @tree.command(name="set-default", description="Set the default address that the command '/serverinfo' will use.")
     async def set_default(interaction: discord.Interaction, default_address: str):
-        log_user_command_message(interaction)
         try:
-
+            await interaction.response.defer()
+            log_user_command_message(interaction)
             data = get_data_from_json(json_path)
             update_json_data(interaction, data, default_address, json_path)
 
             default_address_embed, file_to_attach = build_default_address_embed(default_address)
-            await send_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
+            await send_deferred_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
 
         except Exception as e:
-            await send_bot_response(interaction, exception=e)
+            await send_deferred_bot_response(interaction, exception=e)
 
     @tree.command(name="current-default", description="Returns the current default address.")
     async def current_default(interaction: discord.Interaction):
-        log_user_command_message(interaction)
         try:
+            await interaction.response.defer()
+            log_user_command_message(interaction)
             address = get_remote_minecraft_address(interaction, json_path)
             if address is None:
-                await send_bot_response(interaction, "```Default address is not assigned. Use /setdefault 'address' to assign it.```")
+                await send_deferred_bot_response(interaction, "```Default address is not assigned. Use /setdefault 'address' to assign it.```")
 
             else:
-                await send_bot_response(interaction, f"```The current default address is '{address}'.```")
+                await send_deferred_bot_response(interaction, f"```The current default address is '{address}'.```")
 
         except Exception as e:
-            await send_bot_response(interaction, exception=e)
+            await send_deferred_bot_response(interaction, exception=e)
 
     @tree.command(name="server-info", description="Returns information about a specific server.")
     async def server_info(interaction: discord.Interaction, address: str = ""):
-        log_user_command_message(interaction)
         try:
             await interaction.response.defer()
+            log_user_command_message(interaction)
 
             execution_address = get_remote_minecraft_address(interaction, json_path, address)
             if execution_address == "" or execution_address is None:
