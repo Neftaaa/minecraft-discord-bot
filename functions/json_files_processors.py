@@ -4,7 +4,7 @@ from os import path
 
 
 def get_data_from_json(file_path: str) -> dict:
-    if os.path.exists(file_path):
+    if path.exists(file_path):
         with open(file_path, "r") as json_file:
             return json.load(json_file)
 
@@ -47,11 +47,13 @@ def update_data_for_private(interaction: discord.Interaction, data: dict, defaul
                 private["default_address"] = default_address
             if lang is not None:
                 private["lang"] = lang
+            else:
+                private["lang"] = "en"
 
             is_new_user = False
 
     if is_new_user:
-        private_info = {"user_id": user_id, "default_address": default_address, "lang": "en"}
+        private_info = {"user_id": user_id, "default_address": default_address, "lang": lang}
         privates_list.append(private_info)
 
     data["privates"] = privates_list
