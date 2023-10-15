@@ -1,6 +1,7 @@
 import discord
 from discord import app_commands
 from colorama import Fore
+from os import listdir
 
 from functions.server_data_getter import *
 from functions.embeds_builders import *
@@ -32,11 +33,16 @@ def run_discord_bot():
     bot = Client()
     tree = app_commands.CommandTree(bot)
     json_path = "interactions-data.json"
-    supported_languages = ["en", "fr"]
+
+    supported_languages_list = []
+    languages_dir = 'languages'
+    for filename in listdir(languages_dir):
+        supported_languages_list.append(filename)
 
     supported_languages_str = ""
-    for language in supported_languages:
-        supported_languages_str = supported_languages_str + language + ", "
+    for language in supported_languages_list:
+        normalized_language = language.split(".json")
+        supported_languages_str += f"{normalized_language}, "
 
     supported_languages_str = supported_languages_str[:-2]
 
@@ -121,8 +127,8 @@ def run_discord_bot():
             log_user_command_message(interaction)
 
             normalized_lang = lang.lower()
-            if normalized_lang not in supported_languages:
-                await send_deferred_bot_response(interaction, f"```Specified language is not supported. Supported languages: {supported_languages_str}.```")
+            if normalized_lang not in supported_languages_list:
+                await send_deferred_bot_response(interaction, f"```Specified language is not supported. Supported languages: {supported_languages_str}```")
 
             else:
                 data = get_data_from_json(json_path)
