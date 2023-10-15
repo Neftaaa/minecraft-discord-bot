@@ -1,5 +1,5 @@
 import discord
-from functions.loggers import *
+from functions.loggers import log_bot_response
 
 
 async def send_deferred_bot_response(interaction: discord.Interaction, message_to_send: str | discord.embeds.Embed | None = None,

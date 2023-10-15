@@ -2,36 +2,45 @@ import discord
 import json
 
 
-def update_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str) -> dict:
+def update_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
     guilds_list = data["guilds"]
     is_new_guild = True
     guild_id = interaction.guild.id
 
     for guild in guilds_list:
         if guild["guild_id"] == guild_id:
-            guild["default_address"] = default_address
+            if default_address is not None:
+                guild["default_address"] = default_address
+
+            if lang is not None:
+                guild["lang"] = lang
+
             is_new_guild = False
 
     if is_new_guild:
-        guild_info = {"guild_id": guild_id, "default_address": default_address}
-        guild_list.append(guild_info)
+        guild_info = {"guild_id": guild_id, "default_address": default_address, "lang": "en"}
+        guilds_list.append(guild_info)
 
     data["guilds"] = guilds_list
     return data
 
 
-def update_data_for_private(interaction: discord.Interaction, data: dict, default_address: str) -> dict:
+def update_data_for_private(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
     privates_list = data["privates"]
     is_new_user = True
     user_id = interaction.user.id
 
     for private in privates_list:
         if private["user_id"] == user_id:
-            private["default_address"] = default_address
+            if default_address is not None:
+                private["default_address"] = default_address
+            if lang is not None:
+                private["lang"] = lang
+
             is_new_user = False
 
     if is_new_user:
-        private_info = {"user_id": user_id, "default_address": default_address}
+        private_info = {"user_id": user_id, "default_address": default_address, "lang": "en"}
         privates_list.append(private_info)
 
     data["privates"] = privates_list
@@ -43,12 +52,12 @@ def get_data_from_json(file_path: str) -> dict:
         return json.load(json_file)
 
 
-def update_json_data(interaction: discord.Interaction, data, default_address, file_path: str):
+def update_json_data(interaction: discord.Interaction, file_path: str, data: dict, default_address: str | None = None, lang: str | None = None):
     if str(interaction.channel.type) == "text":
-        updated_data = update_data_for_guild(interaction, data, default_address)
+        updated_data = update_data_for_guild(interaction, data, default_address, lang)
 
     elif str(interaction.channel.type) == "private":
-        updated_data = update_data_for_private(interaction, data, default_address)
+        updated_data = update_data_for_private(interaction, data, default_address, lang)
 
     else:
         return

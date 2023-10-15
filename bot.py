@@ -1,9 +1,11 @@
 import discord
 from discord import app_commands
+from colorama import Fore
 
 from functions.server_data_getter import *
 from functions.embeds_builders import *
 from functions.senders import send_deferred_bot_response
+from functions.loggers import log_user_command_message
 from functions.json_files_processors import get_data_from_json, update_json_data, get_remote_minecraft_address
 from functions.icon_saver import *
 
@@ -30,6 +32,13 @@ def run_discord_bot():
     bot = Client()
     tree = app_commands.CommandTree(bot)
     json_path = "info.json"
+    supported_languages = ["en", "fr"]
+
+    supported_languages_str = ""
+    for language in supported_languages:
+        supported_languages_str = supported_languages_str + language + ", "
+
+    supported_languages_str = supported_languages_str[:-2]
 
     @tree.command(name="help", description="Show the available commands.")
     async def help(interaction: discord.Interaction):
@@ -48,8 +57,9 @@ def run_discord_bot():
         try:
             await interaction.response.defer()
             log_user_command_message(interaction)
+
             data = get_data_from_json(json_path)
-            update_json_data(interaction, data, default_address, json_path)
+            update_json_data(interaction, json_path, data, default_address)
 
             default_address_embed, file_to_attach = build_default_address_embed(default_address)
             await send_deferred_bot_response(interaction, default_address_embed, file_to_attach=file_to_attach)
@@ -62,6 +72,7 @@ def run_discord_bot():
         try:
             await interaction.response.defer()
             log_user_command_message(interaction)
+
             address = get_remote_minecraft_address(interaction, json_path)
             if address is None:
                 await send_deferred_bot_response(interaction, "```Default address is not assigned. Use /setdefault 'address' to assign it.```")
@@ -99,6 +110,23 @@ def run_discord_bot():
                     embed_to_send, icon = build_unreachable_server_embed(execution_address)
 
                 await send_deferred_bot_response(interaction, embed_to_send, icon)
+
+        except Exception as e:
+            await send_deferred_bot_response(interaction, exception=e)
+
+    @tree.command(name="language", description="Change the language of the bot.")
+    async def language(interaction: discord.Interaction, lang: str):
+        try:
+            await interaction.response.defer()
+            log_user_command_message(interaction)
+
+            if lang not in supported_languages:
+                await send_deferred_bot_response(interaction, f"```Specified language is not supported. Supported languages: {supported_languages_str}```")
+
+            else:
+                data = get_data_from_json(json_path)
+                update_json_data(interaction, json_path, data, lang=lang)
+                await send_deferred_bot_response(interaction, f"```Language assigned '{lang}'```")
 
         except Exception as e:
             await send_deferred_bot_response(interaction, exception=e)
