@@ -1,0 +1,30 @@
+{
+  "help_command_desc": "Affiche les commandes disponibles.",
+  "set-default_command_desc": "Définie l’adresse par défaut que la commande '/serverinfo' utilisera.",
+  "current_default_command_desc": "Renvoie l'adresse par défaut actuelle.",
+  "server-info_command_desc": "Renvoie des informations sur le serveur indiqué.",
+  "language_command_desc": "Change la langue du bot.",
+
+  "default_address_not_assigned": "L'adresse par défaut n'est pas assignée. Utilisez /setdefault 'address' pour l'assigner.",
+  "current_default_address": "L'adresse par défaut actuelle est: ",
+  "specified_language_not_supported": "Specified language is not supported. Supported languages: ",
+  "error": "Une erreur est survenue.",
+
+  "help_embed_bot_info": "Informations du bot:",
+  "help_embed_bot_info_value": "MC Server Info est un bot discord qui renvoie des informations à propos d'un serveur minecraft donné.",
+  "help_embed_/help_value": "Affiche ce message.",
+  "help_embed_/server-info_value": "Renvoie des informations sur le serveur indiqué. Peut être utilisé sans indiquer d'adresse si vous avez spécifié une adresse par défaut avec la commande '/set-default'.",
+  "help_embed_/set-default_value": "Assigne une adresse par défaut que le bot utilisera si vous n'indiquez pas d'adresse en utilisant la commandes '/server-info'.",
+  "help_embed_/current_default_value": "Renvoie l'addresse par défaut actuelle.",
+  "help_embed_/language_value": "Change la langue du bot. Langue supportées: ",
+  "online_server_embed_title": "Information du serveur :",
+  "online_server_embed_status": "Statut:",
+  "online_server_embed_online": "En ligne",
+  "online_server_embed_players": "Joueur(s):",
+  "online_server_embed_version": "Version:",
+
+  "unreachable_server_embed_title": "Impossible de se connecter au serveur.",
+  "unreachable_server_embed_field": "Le serveur est hors-ligne ou inexistant.",
+  "default_address_embed_title": "Adresse par défaut assignée: ",
+  "language_embed_title": "Langue assignée: "
+}
