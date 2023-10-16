@@ -5,11 +5,6 @@
   "server-info_command_desc": "Returns information about a specific server.",
   "language_command_desc": "Change the language of the bot.",
 
-  "default_address_not_assigned": "Default address is not assigned. Use /setdefault 'address' to assign it.",
-  "current_default_address": "The current default address is: ",
-  "specified_language_not_supported": "Specified language is not supported. Supported languages: ",
-  "error": "An error occurred.",
-
   "help_embed_bot_info": "Bot information:",
   "help_embed_bot_info_value": "MC Server Info is a discord bot that returns information about a minecraft server.",
   "help_embed_/help_value": "Show this message.",
@@ -17,6 +12,7 @@
   "help_embed_/set-default_value": "Set a default address that the bot will use if you don't specify an address using '/server-info'.",
   "help_embed_/current_default_value": "Returns the current default address.",
   "help_embed_/language_value": "Change the language of the bot. Supported languages: ",
+
   "online_server_embed_title": "Server information :",
   "online_server_embed_status": "Status:",
   "online_server_embed_online": "Online",
@@ -25,6 +21,12 @@
 
   "unreachable_server_embed_title": "Can't connect to server.",
   "unreachable_server_embed_field": "Server is offline or doesn't exist.",
+
   "default_address_embed_title": "Default address assigned: ",
-  "language_embed_title": "Language assigned: "
+  "language_embed_title": "Language assigned: ",
+
+  "default_address_not_assigned_embed_title": "Default address is not assigned. Use /setdefault 'address' to assign it.",
+  "build_current_default_address_embed_title": "The current default address is: ",
+  "specified_language_not_supported_embed_title": "Specified language is not supported. Supported languages: ",
+  "error_embed_title": "An error occurred."
 }

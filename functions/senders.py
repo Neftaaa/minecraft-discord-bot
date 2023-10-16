@@ -1,12 +1,14 @@
 import discord
 from functions.loggers import log_bot_response
+from functions.embeds_builders import build_error_embed
+from functions.interactions_data_processors import get_language_data
 
 
 async def send_deferred_bot_response(interaction: discord.Interaction, message_to_send: str | discord.embeds.Embed | None = None,
-                                     file_to_attach: discord.file.File | None = None, exception: Exception | None = None):
+                                     file_to_attach: discord.file.File | None = None, exception: Exception | None = None, lang: str | None = None):
     if exception is not None:
         log_bot_response(interaction, exception)
-        await interaction.followup.send("```An error occurred.```")
+        await interaction.followup.send(build_error_embed(lang))
 
     else:
         try:

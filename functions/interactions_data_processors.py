@@ -8,9 +8,64 @@ def get_interactions_data(file_path: str) -> dict:
         with open(file_path, "r") as json_file:
             return json.load(json_file)
 
-    with open(file_path, "w+") as new_json_file:
-        new_json_file.write('{"guilds": [], "privates": []}')
+    with open(file_path, "w+") as interaction_data_file:
+        interaction_data_file.write('{"guilds": [], "privates": []}')
         return {"guilds": [], "privates": []}
+
+
+def get_interaction_language(interaction: discord.Interaction, file_path: str) -> str:
+    data = get_interactions_data(file_path)
+
+    if str(interaction.channel.type) == "private":
+        privates_list = data["privates"]
+        user_id = interaction.user.id
+
+        for private in privates_list:
+            if user_id == private["user_id"]:
+                return private["lang"]
+
+    else:
+        guilds_list = data["guilds"]
+        guild_id = interaction.guild.id
+
+        for guild in guilds_list:
+            if guild_id == guild["guild_id"]:
+                return guild["lang"]
+
+    return "en"
+
+
+def get_language_data(lang: str):
+    filepath = "languages/" + lang + ".json"
+    with open(filepath, "r") as language_file:
+        language_data = json.load(language_file)
+
+    return language_data
+
+
+def get_interaction_default_address(interaction: discord.Interaction, json_path: str, server_address: str | None = None) -> str | None:
+    if server_address == "" or server_address is None:
+        data = get_interactions_data(json_path)
+
+        if str(interaction.channel.type) == "private":
+            privates_list = data["privates"]
+            user_id = interaction.user.id
+
+            for private in privates_list:
+                if user_id == private["user_id"]:
+                    return private["default_address"]
+
+        else:
+            guilds_list = data["guilds"]
+            guild_id = interaction.guild.id
+
+            for guild in guilds_list:
+                if guild_id == guild["guild_id"]:
+                    return guild["default_address"]
+
+        return None
+
+    return server_address
 
 
 def update_interactions_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
@@ -72,28 +127,3 @@ def update_interactions_data(interaction: discord.Interaction, file_path: str, d
 
     with open(file_path, "w") as json_file:
         json.dump(updated_data, json_file)
-
-
-def get_remote_minecraft_address(interaction: discord.Interaction, json_path: str, server_address: str | None = None) -> str | None:
-    if server_address == "" or server_address is None:
-        data = get_interactions_data(json_path)
-
-        if str(interaction.channel.type) == "private":
-            privates_list = data["privates"]
-            user_id = interaction.user.id
-
-            for private in privates_list:
-                if user_id == private["user_id"]:
-                    return private["default_address"]
-
-        else:
-            guilds_list = data["guilds"]
-            guild_id = interaction.guild.id
-
-            for guild in guilds_list:
-                if guild_id == guild["guild_id"]:
-                    return guild["default_address"]
-
-        return None
-
-    return server_address
