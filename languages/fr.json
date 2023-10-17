@@ -25,7 +25,7 @@
   "language_embed_title": "Langue assignée: ",
 
   "default_address_not_assigned_embed_title": "L'adresse par défaut n'est pas assignée. Utilisez /setdefault 'address' pour l'assigner.",
-  "build_current_default_address_embed_title": "L'adresse par défaut actuelle est: ",
+  "current_default_address_embed_title": "L'adresse par défaut actuelle est: ",
   "specified_language_not_supported_embed_title": "La langue indiquée n'est pas supportée. Langues supportées: ",
   "error_embed_title": "Une erreur est survenue."
 }

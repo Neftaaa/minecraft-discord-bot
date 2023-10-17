@@ -111,7 +111,7 @@ def build_not_assigned_default_address_embed(lang: str) -> discord.embeds.Embed:
 def build_current_default_address_embed(default_address: str, lang: str) -> discord.embeds.Embed:
     language_data = get_language_data(lang)
 
-    current_default_address_embed = discord.Embed(title=f"{language_data['build_current_default_address_embed_title']}`'{default_address}'`", color=discord.Color.green())
+    current_default_address_embed = discord.Embed(title=f"{language_data['current_default_address_embed_title']}`'{default_address}'`", color=discord.Color.green())
     return current_default_address_embed
 
 

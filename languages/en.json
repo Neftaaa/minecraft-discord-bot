@@ -26,7 +26,7 @@
   "language_embed_title": "Language assigned: ",
 
   "default_address_not_assigned_embed_title": "Default address is not assigned. Use /setdefault 'address' to assign it.",
-  "build_current_default_address_embed_title": "The current default address is: ",
+  "current_default_address_embed_title": "The current default address is: ",
   "specified_language_not_supported_embed_title": "Specified language is not supported. Supported languages: ",
   "error_embed_title": "An error occurred."
 }

@@ -36,11 +36,10 @@ def get_interaction_language(interaction: discord.Interaction, file_path: str) -
 
 
 def get_language_data(lang: str):
-    filepath = "languages/" + lang + ".json"
-    with open(filepath, "r") as language_file:
-        language_data = json.load(language_file)
+    filepath = f"languages/{lang}.json"
 
-    return language_data
+    with open(filepath, "r", encoding="utf-8") as language_file:
+        return json.load(language_file)
 
 
 def get_interaction_default_address(interaction: discord.Interaction, json_path: str, server_address: str | None = None) -> str | None:
