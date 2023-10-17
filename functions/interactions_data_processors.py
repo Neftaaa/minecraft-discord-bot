@@ -13,6 +13,13 @@ def get_interactions_data(file_path: str) -> dict:
         return {"guilds": [], "privates": []}
 
 
+def get_language_data(lang: str):
+    filepath = f"languages/{lang}.json"
+
+    with open(filepath, "r", encoding="utf-8") as language_file:
+        return json.load(language_file)
+
+
 def get_interaction_language(interaction: discord.Interaction, file_path: str) -> str:
     data = get_interactions_data(file_path)
 
@@ -33,13 +40,6 @@ def get_interaction_language(interaction: discord.Interaction, file_path: str) -
                 return guild["lang"]
 
     return "en"
-
-
-def get_language_data(lang: str):
-    filepath = f"languages/{lang}.json"
-
-    with open(filepath, "r", encoding="utf-8") as language_file:
-        return json.load(language_file)
 
 
 def get_interaction_default_address(interaction: discord.Interaction, json_path: str, server_address: str | None = None) -> str | None:
