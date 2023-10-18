@@ -1,7 +1,7 @@
 from os import path, listdir
 
 
-def get_bot_token():
+def get_bot_token() -> str:
     if path.exists("token.txt"):
         with open("token.txt", "r") as token_file:
             return token_file.read()
@@ -10,7 +10,7 @@ def get_bot_token():
     raise Exception("Can't find token file, created a new one named: 'token.txt'. Please write the bot token in this file.")
 
 
-def get_supported_languages():
+def get_supported_languages() -> (list, str):
     supported_languages_list = []
     languages_dir = 'languages'
     for filename in listdir(languages_dir):
