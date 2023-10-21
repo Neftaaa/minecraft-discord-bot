@@ -1,9 +1,8 @@
-import discord
 from discord import app_commands
 from colorama import Fore
 
-from functions.init import *
-from commands import *
+from src.functions.init import *
+from src.bot.commands import *
 
 
 def run_discord_bot():

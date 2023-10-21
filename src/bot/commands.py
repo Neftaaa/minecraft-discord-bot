@@ -1,9 +1,9 @@
-from functions.server_data_getter import *
-from functions.embeds_builders import *
-from functions.senders import send_deferred_bot_response
-from functions.loggers import log_user_command_message
-from functions.interactions_data_processors import *
-from functions.icon_saver import *
+from src.functions.server_data_getter import *
+from src.functions.embeds_builders import *
+from src.functions.senders import send_deferred_bot_response
+from src.functions.loggers import log_user_command_message
+from src.functions.interactions_data_processors import *
+from src.functions.icon_saver import *
 
 
 async def help_command(interaction: discord.Interaction, supported_languages_str: str, json_path: str):
@@ -71,7 +71,7 @@ async def server_info_command(interaction: discord.Interaction, json_path: str, 
                     save_icon(icon_path, server_data["icon"])
 
                 else:
-                    icon_path = "server-icons/default_icon.png"
+                    icon_path = "../../server-icons/default_icon.png"
 
                 embed_to_send, icon = build_online_server_embed(server_data, execution_address, icon_path, interaction_lang)
 

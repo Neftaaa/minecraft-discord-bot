@@ -67,7 +67,7 @@ def get_interaction_default_address(interaction: discord.Interaction, json_path:
     return server_address
 
 
-def update_interactions_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
+def update_interactions_data_for_guild(interaction: discord.Interaction, data: dict, default_address: str | None, lang: str | None) -> dict:
     guilds_list = data["guilds"]
     is_new_guild = True
     guild_id = interaction.guild.id
@@ -83,14 +83,17 @@ def update_interactions_data_for_guild(interaction: discord.Interaction, data: d
             is_new_guild = False
 
     if is_new_guild:
-        guild_info = {"guild_id": guild_id, "default_address": default_address, "lang": "en"}
+        if lang is None:
+            lang = "en"
+
+        guild_info = {"guild_id": guild_id, "default_address": default_address, "lang": lang}
         guilds_list.append(guild_info)
 
     data["guilds"] = guilds_list
     return data
 
 
-def update_interactions_data_for_private(interaction: discord.Interaction, data: dict, default_address: str, lang: str | None) -> dict:
+def update_interactions_data_for_private(interaction: discord.Interaction, data: dict, default_address: str | None, lang: str | None) -> dict:
     privates_list = data["privates"]
     is_new_user = True
     user_id = interaction.user.id

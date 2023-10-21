@@ -6,3 +6,4 @@ server-icons/*
 interactions-data.json
 *.iml
 token.txt
+tests/*/.pytest_cache/

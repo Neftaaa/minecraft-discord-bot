@@ -1,7 +1,7 @@
 import discord
-from functions.loggers import log_bot_response
-from functions.embeds_builders import build_error_embed
-from functions.interactions_data_processors import get_language_data
+from src.functions.loggers import log_bot_response
+from src.functions.embeds_builders import build_error_embed
+from src.functions.interactions_data_processors import get_language_data
 
 
 async def send_deferred_bot_response(interaction: discord.Interaction, message_to_send: str | discord.embeds.Embed | None = None,

@@ -1,6 +1,6 @@
 import discord
 from datetime import datetime
-from functions.interactions_data_processors import get_language_data
+from src.functions.interactions_data_processors import get_language_data
 
 
 def convert_server_data_dict(server_data: dict) -> dict:
