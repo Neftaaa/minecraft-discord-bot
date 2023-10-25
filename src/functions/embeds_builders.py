@@ -25,11 +25,11 @@ def build_help_embed(supported_languages: str, lang: str) -> discord.embeds.Embe
 
     help_embed = discord.Embed(title="Help", color=discord.Color.green())
     help_embed.add_field(name=language_data["help_embed_bot_info"], value=f"```{language_data['help_embed_bot_info_value']}```", inline=False)
-    help_embed.add_field(name="/help", value=f"```{language_data['help_embed_/help_value']}```", inline=False)
-    help_embed.add_field(name="/server-info `address`", value=f"```{language_data['help_embed_/server-info_value']}```", inline=False)
-    help_embed.add_field(name="/set-default `default_address`", value=f"```{language_data['help_embed_/set-default_value']}```", inline=False)
-    help_embed.add_field(name="/current-default", value=f"```{language_data['help_embed_/current_default_value']}```")
-    help_embed.add_field(name="/language `lang`", value=f"```{language_data['help_embed_/language_value']}{supported_languages}```", inline=False)
+    help_embed.add_field(name="</help:1161352090501775471>", value=f"```{language_data['help_embed_/help_value']}```", inline=False)
+    help_embed.add_field(name="</server-info:1162832201105293484> `address`", value=f"```{language_data['help_embed_/server-info_value']}```", inline=False)
+    help_embed.add_field(name="</set-default:1162832201105293482>  `default_address`", value=f"```{language_data['help_embed_/set-default_value']}```", inline=False)
+    help_embed.add_field(name="</current-default:1162832201105293483>", value=f"```{language_data['help_embed_/current_default_value']}```")
+    help_embed.add_field(name="</language:1163048440410939452> `lang`", value=f"```{language_data['help_embed_/language_value']}{supported_languages}```", inline=False)
     return help_embed
 
 
