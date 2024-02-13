@@ -45,7 +45,6 @@ def build_online_server_embed(server_data: dict, address, icon_path: str, lang: 
     server_data_embed.set_thumbnail(url="attachment://default_icon.png")
 
     server_data_embed.add_field(name="MOTD:", value=f"```{usable_server_data['final_motd']}```", inline=False)
-    #server_data_embed.add_field(name="\u200B", value="\u200B", inline=False)
     server_data_embed.add_field(name=language_data["online_server_embed_status"], value=f"`{language_data['online_server_embed_online']}`", inline=True)
     server_data_embed.add_field(name=language_data["online_server_embed_players"], value=f"`{usable_server_data['online_player_count']}"
                                                                                          f"/{usable_server_data['max_player_count']}`", inline=True)
